@@ -1,0 +1,9 @@
+# Ignore node_modules directories in all subdirectories.
+node_modules
+
+# Ignore .env files in all subdirectories. These files often contain sensitive environment variables.
+.env
+
+# Ignore any npm-debug.log files. These are generated when npm runs into errors.
+npm-debug.log
+
