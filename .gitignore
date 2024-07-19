@@ -7,3 +7,7 @@ node_modules
 # Ignore any npm-debug.log files. These are generated when npm runs into errors.
 npm-debug.log
 
+# Ignore deploy and webhook scripts
+deploy.ps1
+webhook.js
+
