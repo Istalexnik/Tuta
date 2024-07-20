@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 
 app.post('/search', (req, res) => {
   const searchText = req.body.searchText;
-  console.log(`Search text46454: ${searchText}`);  // Log the search text
+  console.log(`Search text4645g4: ${searchText}`);  // Log the search text
 
   pool.query('SELECT * FROM items WHERE text ILIKE $1', [`%${searchText}%`], (error, results) => {
     if (error) {
