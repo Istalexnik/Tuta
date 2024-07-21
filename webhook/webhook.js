@@ -14,7 +14,13 @@ app.post('/webhook', (req, res) => {
   let deployCommand;
 
   if (branch === 'dev') {
-    deployCommand = 'pm2 deploy ecosystem.config.js uat';
+    deployCommand = `
+      cd /mnt/d/Linux/Aka/Tuta &&
+      git pull origin dev &&
+      npm install &&
+      pm2 reload ecosystem.config.js --env uat &&
+      pm2 save
+    `;
   } else if (branch === 'uat') {
     deployCommand = 'pm2 deploy ecosystem.config.js prod';
   } else {

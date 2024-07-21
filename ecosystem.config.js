@@ -73,20 +73,6 @@ module.exports = {
   ],
 
   deploy: {
-    uat: {
-      user: 'node',
-      host: 'mint-quick-toad.ngrok-free.app',  // Use the publicly accessible address of your UAT server
-      ref: 'origin/dev',
-      repo: 'git@github.com:Istalexnik/Tuta.git',
-      path: '/mnt/d/Linux/Aka/Tuta',
-      'post-deploy': `
-        cd /mnt/d/Linux/Aka/Tuta &&
-        npm install &&
-        pm2 reload ecosystem.config.js --env uat &&
-        pm2 save
-      `,
-      env: environments.uat,
-    },
     prod: {
       user: 'node',
       host: 'prod-server',
