@@ -1,3 +1,6 @@
+# Ignore logs
+logs
+
 # Ignore node_modules directories in all subdirectories.
 node_modules
 
@@ -7,6 +10,4 @@ node_modules
 # Ignore any npm-debug.log files. These are generated when npm runs into errors.
 npm-debug.log
 
-# Ignore deploy and webhook scripts
-webhook.js
 

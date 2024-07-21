@@ -25,17 +25,18 @@ app.get('/', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-  const searchText = req.body.searchText;
+  const searchText = req.body.searchText.trim().toUpperCase(); // Ensure the search text is in uppercase
   console.log(`Search text: ${searchText}`);  // Log the search text
 
-  pool.query('SELECT * FROM items WHERE text ILIKE $1', [`%${searchText}%`], (error, results) => {
+  // Search the 'character' column for exact matches
+  pool.query('SELECT info FROM items WHERE character = $1', [searchText], (error, results) => {
     if (error) {
       console.error(error);  // Log any errors
       res.status(500).send('Server error');
       return;
     }
     console.log(`Query results: ${JSON.stringify(results.rows)}`);  // Log query results
-    res.json(results.rows);
+    res.json(results.rows.map(row => row.info));  // Return only the info field
   });
 });
 
