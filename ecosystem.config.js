@@ -56,6 +56,7 @@ const webhookConfig = {
   instances: 1,
   exec_mode: 'fork',
   watch: false,
+  log_date_format: 'YYYY-MM-DD HH:mm:ss',
   log_file: 'logs/webhook/combined.log',
   out_file: 'logs/webhook/out.log',
   error_file: 'logs/webhook/err.log',
@@ -74,7 +75,8 @@ module.exports = {
   deploy: {
     uat: {
       user: 'node',
-      host: 'mint-quick-toad.ngrok-free.app',
+      host: '0.tcp.ngrok.io',  // Use the ngrok TCP address for SSH
+      port: '12345',  // Use the ngrok TCP port for SSH
       ref: 'origin/dev',
       repo: 'git@github.com:Istalexnik/Tuta.git',
       path: '/mnt/d/Linux/Aka/Tuta',
@@ -90,7 +92,7 @@ module.exports = {
       user: 'node',
       host: 'prod-server',
       ref: 'origin/uat',
-      repo: 'git@github.com:yourusername/yourrepo.git',
+      repo: 'git@github.com:Istalexnik/Tuta.git',
       path: '/var/www/yourapp',
       'post-deploy': `
         cd /var/www/yourapp/current &&
