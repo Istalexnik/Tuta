@@ -71,13 +71,28 @@ module.exports = {
     tutaConfig,
     webhookConfig,
   ],
-
+//for now just using webhook since for SSH you need a real server rather than ngork
   deploy: {
+    uat: {
+      user: 'node',
+      host: '8.tcp.ngrok.io',
+	  port: '16266',
+      ref: 'origin/dev',
+      repo: 'git@github.com:Istalexnik/Tuta.git',
+      path: '/mnt/d/Linux/Aka/Tuta',
+      'post-deploy': `
+        cd /mnt/d/Linux/Aka/Tuta &&
+        npm install &&
+        pm2 reload ecosystem.config.js --env uat &&
+        pm2 save
+      `,
+      env: environments.uat,
+    },
     prod: {
       user: 'node',
       host: 'prod-server',
       ref: 'origin/uat',
-      repo: 'git@github.com:Istalexnik/Tuta.git',
+      repo: 'git@github.com:yourusername/yourrepo.git',
       path: '/var/www/yourapp',
       'post-deploy': `
         cd /var/www/yourapp/current &&
