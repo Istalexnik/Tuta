@@ -20,7 +20,7 @@ app.post('/webhook', (req, res) => {
       cd /mnt/d/Linux/Aka/Tuta &&
       git pull origin dev &&
       npm install &&
-      pm2 reload ecosystem.config.js --env uat &&
+      (pm2 reload ecosystem.config.js --env uat || (sleep 6 && pm2 reload ecosystem.config.js --env uat --force)) &&
       pm2 save
     `];
   } else if (branch === 'uat') {
@@ -33,7 +33,7 @@ app.post('/webhook', (req, res) => {
 
   console.log(`Executing deployment command: ${deployCommand} ${args.join(' ')}`);
 
-  const deployProcess = spawn(deployCommand, args);
+  const deployProcess = spawn(deployCommand, args, { shell: true });
 
   let stdoutData = '';
   let stderrData = '';
