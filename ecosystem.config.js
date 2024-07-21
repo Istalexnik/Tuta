@@ -10,7 +10,7 @@ const environments = {
     DB_PASS: process.env.DEV_DB_PASS || 'mypassword',
     DB_NAME: process.env.DEV_DB_NAME || 'mydatabase',
     SV_PORT: 2000,
-    watch: ['Tuta'],
+    watch: true,  // Enable watching
   },
   uat: {
     NODE_ENV: 'uat',
@@ -40,6 +40,7 @@ const tutaConfig = {
   script: 'server.js',
   exec_mode: 'cluster',
   instances: 1,
+  watch: environments[appEnv].watch,  // Use the correct watch setting based on the environment
   ignore_watch: ['node_modules', '.git', 'logs'],
   log_date_format: 'YYYY-MM-DD HH:mm:ss',
   log_file: 'logs/combined.log',
@@ -73,10 +74,10 @@ module.exports = {
   deploy: {
     uat: {
       user: 'node',
-      host: 'uat-server',
+      host: 'mint-quick-toad.ngrok-free.app',
       ref: 'origin/dev',
-      repo: 'git@github.com:yourusername/yourrepo.git',
-      path: '/var/www/yourapp',
+      repo: 'git@github.com:Istalexnik/Tuta.git',
+      path: '/mnt/d/Linux/Aka/Tuta',
       'post-deploy': `
         cd /mnt/d/Linux/Aka/Tuta &&
         npm install &&
