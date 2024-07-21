@@ -24,22 +24,23 @@ app.post('/webhook', (req, res) => {
   } else if (branch === 'uat') {
     deployCommand = 'pm2 deploy ecosystem.config.js prod';
   } else {
+    console.log('No deployment triggered for this branch');
     return res.status(200).send('No deployment triggered');
   }
 
   console.log(`Executing deployment command: ${deployCommand}`);
-  
+
   exec(deployCommand, (error, stdout, stderr) => {
-	console.log(`Deployment stdout: ${stdout}`);
-    console.log(`Deployment stderr: ${stderr}`);
     if (error) {
       console.error(`Deployment error: ${error.message}`);
       console.error(`stderr: ${stderr}`);
-      return res.status(500).send('Deployment failed');
+      res.status(500).send('Deployment failed');
+    } else {
+      console.log(`Deployment stdout: ${stdout}`);
+      console.log(`Deployment stderr: ${stderr}`);
+      console.log('Deployment successful');
+      res.status(200).send('Deployment successful');
     }
-
-    console.log('Deployment successful');
-    res.status(200).send('Deployment successful');
   });
 });
 
