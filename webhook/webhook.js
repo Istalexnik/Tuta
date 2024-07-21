@@ -27,13 +27,17 @@ app.post('/webhook', (req, res) => {
     return res.status(200).send('No deployment triggered');
   }
 
+  console.log(`Executing deployment command: ${deployCommand}`);
+  
   exec(deployCommand, (error, stdout, stderr) => {
     if (error) {
-      console.error(`Deployment error: ${error}`);
+      console.error(`Deployment error: ${error.message}`);
+      console.error(`stderr: ${stderr}`);
       return res.status(500).send('Deployment failed');
     }
-    console.log(`Deployment output: ${stdout}`);
-    console.error(`Deployment errors: ${stderr}`);
+    console.log(`Deployment stdout: ${stdout}`);
+    console.log(`Deployment stderr: ${stderr}`);
+    console.log('Deployment successful');
     res.status(200).send('Deployment successful');
   });
 });
