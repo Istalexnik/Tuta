@@ -74,7 +74,7 @@ module.exports = {
 //for now just using webhook since for SSH you need a real server rather than ngork
   deploy: {
     uat: {
-      user: 'node',
+      user: 'istalexnik',
       host: '8.tcp.ngrok.io',
 	  port: '16266',
       ref: 'origin/dev',
@@ -89,13 +89,14 @@ module.exports = {
       env: environments.uat,
     },
     prod: {
-      user: 'node',
-      host: 'prod-server',
+      user: 'istalexnik',
+      host: '8.tcp.ngrok.io',
+	  port: '16266',
       ref: 'origin/uat',
-      repo: 'git@github.com:yourusername/yourrepo.git',
-      path: '/var/www/yourapp',
+      repo: 'git@github.com:Istalexnik/Tuta.git',
+      path: '/mnt/d/Linux/Aka/Tuta',
       'post-deploy': `
-        cd /var/www/yourapp/current &&
+        cd /mnt/d/Linux/Aka/Tuta &&
         npm install &&
         pm2 reload ecosystem.config.js --env prod &&
         pm2 save
