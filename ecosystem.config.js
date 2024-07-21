@@ -75,8 +75,7 @@ module.exports = {
   deploy: {
     uat: {
       user: 'node',
-      host: '0.tcp.ngrok.io',  // Use the ngrok TCP address for SSH
-      port: '12345',  // Use the ngrok TCP port for SSH
+      host: 'mint-quick-toad.ngrok-free.app',  // Use the publicly accessible address of your UAT server
       ref: 'origin/dev',
       repo: 'git@github.com:Istalexnik/Tuta.git',
       path: '/mnt/d/Linux/Aka/Tuta',
