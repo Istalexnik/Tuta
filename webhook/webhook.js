@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
 const app = express();
 const PORT = process.env.WH_PORT || 3002;
@@ -12,34 +12,47 @@ app.post('/webhook', (req, res) => {
   console.log(`Received push event for branch: ${branch}`);
 
   let deployCommand;
+  let args;
 
   if (branch === 'dev') {
-    deployCommand = `
+    deployCommand = 'sh';
+    args = ['-c', `
       cd /mnt/d/Linux/Aka/Tuta &&
       git pull origin dev &&
       npm install &&
       pm2 reload ecosystem.config.js --env uat &&
       pm2 save
-    `;
+    `];
   } else if (branch === 'uat') {
-    deployCommand = 'pm2 deploy ecosystem.config.js prod';
+    deployCommand = 'pm2';
+    args = ['deploy', 'ecosystem.config.js', 'prod'];
   } else {
     console.log('No deployment triggered for this branch');
     return res.status(200).send('No deployment triggered');
   }
 
-  console.log(`Executing deployment command: ${deployCommand}`);
+  console.log(`Executing deployment command: ${deployCommand} ${args.join(' ')}`);
 
-  exec(deployCommand, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Deployment error: ${error.message}`);
-      console.error(`stderr: ${stderr}`);
-      res.status(500).send('Deployment failed');
-    } else {
-      console.log(`Deployment stdout: ${stdout}`);
-      console.log(`Deployment stderr: ${stderr}`);
-      console.log('Deployment successful');
+  const deployProcess = spawn(deployCommand, args);
+
+  let stdoutData = '';
+  let stderrData = '';
+
+  deployProcess.stdout.on('data', (data) => {
+    stdoutData += data.toString();
+  });
+
+  deployProcess.stderr.on('data', (data) => {
+    stderrData += data.toString();
+  });
+
+  deployProcess.on('close', (code) => {
+    if (code === 0) {
+      console.log(`Deployment successful\nstdout: ${stdoutData}\nstderr: ${stderrData}`);
       res.status(200).send('Deployment successful');
+    } else {
+      console.error(`Deployment failed with code ${code}\nstderr: ${stderrData}`);
+      res.status(500).send('Deployment failed');
     }
   });
 });
