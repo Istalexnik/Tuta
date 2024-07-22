@@ -1,8 +1,8 @@
-# Ignore logs
-logs
+# Ignore logs directories
+logs/
 
-# Ignore node_modules directories in all subdirectories.
-node_modules
+# Ignore node_modules directories in all subdirectories
+node_modules/
 
 # Ignore .env files in all subdirectories. These files often contain sensitive environment variables.
 .env
@@ -10,4 +10,9 @@ node_modules
 # Ignore any npm-debug.log files. These are generated when npm runs into errors.
 npm-debug.log
 
-
+# Ignore PM2 deployment source folder
+source/
+shared/
+current
+ssh
+.deploys
