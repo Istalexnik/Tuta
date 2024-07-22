@@ -1,6 +1,4 @@
-const appEnv = process.env.NODE_ENV || process.env.APP_ENV || 'dev';
-
-// Define the environments with the correct SV_PORT for each
+// Define the environments with the correct configurations for each
 const environments = {
   dev: {
     NODE_ENV: 'dev',
@@ -20,7 +18,7 @@ const environments = {
     DB_PASS: process.env.UAT_DB_PASS || 'mypassword',
     DB_NAME: process.env.UAT_DB_NAME || 'mydatabase',
     SV_PORT: 2002,
-    watch: false,
+    watch: false,  // Disable watching
   },
   prod: {
     NODE_ENV: 'prod',
@@ -30,78 +28,26 @@ const environments = {
     DB_PASS: process.env.PROD_DB_PASS || 'mypassword',
     DB_NAME: process.env.PROD_DB_NAME || 'mydatabase',
     SV_PORT: 2005,
-    watch: false,
-  },
-};
-
-// Common application configuration for Tuta
-const tutaConfig = {
-  name: 'Tuta',
-  script: 'server.js',
-  exec_mode: 'cluster',
-  instances: 1,
-  watch: environments[appEnv].watch,  // Use the correct watch setting based on the environment
-  ignore_watch: ['node_modules', '.git', 'logs'],
-  log_date_format: 'YYYY-MM-DD HH:mm:ss',
-  log_file: 'logs/combined.log',
-  out_file: 'logs/out.log',
-  error_file: 'logs/err.log',
-  env: environments[appEnv], // Use the correct environment configuration based on appEnv
-};
-
-// Webhook configuration for UAT and production environments
-const webhookConfig = {
-  name: 'webhook',
-  script: 'webhook/webhook.js',
-  instances: 1,
-  exec_mode: 'fork',
-  watch: false,
-  log_date_format: 'YYYY-MM-DD HH:mm:ss',
-  log_file: 'logs/webhook/combined.log',
-  out_file: 'logs/webhook/out.log',
-  error_file: 'logs/webhook/err.log',
-  env: {
-    NODE_ENV: appEnv,
-    WH_PORT: process.env.WH_PORT || 3002,
+    watch: false,  // Disable watching
   },
 };
 
 module.exports = {
   apps: [
-    tutaConfig,
-    webhookConfig,
+    {
+      name: 'Tuta',
+      script: 'server.js',
+      exec_mode: 'cluster',  // Cluster mode for multiple instances
+      instances: 1,  // Number of instances to run
+      watch: environments[process.env.NODE_ENV || 'dev'].watch,  // Watch files if enabled in environment config
+      ignore_watch: ['node_modules', '.git', 'logs'],  // Directories to ignore
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',  // Log date format
+      log_file: 'logs/combined.log',  // Combined log file
+      out_file: 'logs/out.log',  // Out log file
+      error_file: 'logs/err.log',  // Error log file
+      env: environments.dev,  // Default environment settings
+      env_uat: environments.uat,  // UAT environment settings
+      env_prod: environments.prod,  // Production environment settings
+    },
   ],
-//for now just using webhook since for SSH you need a real server rather than ngork
-  deploy: {
-    uat: {
-      user: 'istalexnik',
-      host: '8.tcp.ngrok.io',
-	  port: '16266',
-      ref: 'origin/dev',
-      repo: 'git@github.com:Istalexnik/Tuta.git',
-      path: '/mnt/d/Linux/Aka/Tuta',
-      'post-deploy': `
-        cd /mnt/d/Linux/Aka/Tuta &&
-        npm install &&
-        pm2 reload ecosystem.config.js --env uat &&
-        pm2 save
-      `,
-      env: environments.uat,
-    },
-    prod: {
-      user: 'istalexnik',
-      host: '8.tcp.ngrok.io',
-	  port: '16266',
-      ref: 'origin/uat',
-      repo: 'git@github.com:Istalexnik/Tuta.git',
-      path: '/mnt/d/Linux/Aka/Tuta',
-      'post-deploy': `
-        cd /mnt/d/Linux/Aka/Tuta &&
-        npm install &&
-        pm2 reload ecosystem.config.js --env prod &&
-        pm2 save
-      `,
-      env: environments.prod,
-    },
-  },
 };

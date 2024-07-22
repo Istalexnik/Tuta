@@ -40,8 +40,12 @@ app.post('/search', (req, res) => {
   });
 });
 
-// Start the server
-const port = process.env.SV_PORT; // Use SV_PORT for the server port
+const port = process.env.SV_PORT;
+const env = process.env.APP_ENV;
+
+console.log(`Environment Variables: SV_PORT=${process.env.SV_PORT}, NODE_ENV=${process.env.NODE_ENV}`);
+
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port} in ${env} environment`);
 });
+
