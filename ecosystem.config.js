@@ -37,18 +37,20 @@ const environments = {
 
 module.exports = {
   apps: [
-  name: appName,
-  script: 'server.js',
-  exec_mode: 'cluster',
-  instances: 1,
-  watch: environments[appEnv].watch,  // Use the correct watch setting based on the environment
-  ignore_watch: ['**/node_modules', '**/.git', '**/logs'], 
-  log_date_format: 'YYYY-MM-DD HH:mm:ss',
-  log_file: 'logs/combined.log',
-  out_file: 'logs/out.log',
-  error_file: 'logs/err.log',
-  env: environments[appEnv], // Use the correct environment configuration based on appEnv
-],
+    {
+      name: appName,
+      script: 'server.js',
+      exec_mode: 'cluster',
+      instances: 1,
+      watch: environments[appEnv].watch,  // Use the correct watch setting based on the environment
+      ignore_watch: ['**/node_modules', '**/.git', '**/logs'], 
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      log_file: 'logs/combined.log',
+      out_file: 'logs/out.log',
+      error_file: 'logs/err.log',
+      env: environments[appEnv], // Use the correct environment configuration based on appEnv
+    }
+  ],
 
   deploy: {
     uat: {
@@ -66,7 +68,7 @@ module.exports = {
     prod: {
       user: 'istalexnik',
       host: '8.tcp.ngrok.io',
-	  port: '16266',
+      port: '16266',
       ref: 'origin/uat',
       repo: `git@github.com:Istalexnik/${appName}.git`,
       path: `/mnt/d/Linux/Aka/${appName}`,
@@ -77,4 +79,4 @@ module.exports = {
       env: environments.prod,
     },
   },
-}
+};
