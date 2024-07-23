@@ -7,6 +7,9 @@ node_modules/
 # Ignore .env files in all subdirectories. These files often contain sensitive environment variables.
 .env
 
+# Ignore .env files in all subdirectories. These files often contain sensitive environment variables.
+ecosystem.config.js
+
 # Ignore any npm-debug.log files. These are generated when npm runs into errors.
 npm-debug.log
 
