@@ -1,8 +1,12 @@
+require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const { Pool } = require('pg');
+const searchRoutes = require('./routes/search');
+const path = require('path');
 
 const app = express();
+const port = process.env.SV_PORT;
 
 // PostgreSQL pool setup
 const pool = new Pool({
@@ -14,35 +18,19 @@ const pool = new Pool({
 });
 
 // Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Serve static files 
-app.use(express.static('public'));
+app.use(helmet());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+app.use('/search', searchRoutes(pool));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Server error');
 });
-
-app.post('/search', (req, res) => {
-  const searchText = req.body.searchText.trim().toUpperCase(); // Ensure the search text is in uppercase
-  console.log(`Search text: ${searchText}`);  // Log the search text
-
-  // Search the 'character' column for exact matches
-  pool.query('SELECT info FROM items WHERE character = $1', [searchText], (error, results) => {
-    if (error) {
-      console.error(error);  // Log any errors
-      res.status(500).send('Server error');
-      return;
-    }
-    console.log(`Query results: ${JSON.stringify(results.rows)}`);  // Log query results
-    res.json(results.rows.map(row => row.info));  // Return only the info field
-  });
-});
-
-const port = process.env.SV_PORT;
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
