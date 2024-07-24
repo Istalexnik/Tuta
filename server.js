@@ -25,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.use('/search', searchRoutes(pool));
 
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
